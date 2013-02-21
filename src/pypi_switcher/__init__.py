@@ -1,8 +1,9 @@
 __import__("pkg_resources").declare_namespace(__name__)
 
-from sys import argv
+import sys
 from infi.pyutils.contexts import contextmanager
-from os import path
+from os import path, makedirs
+
 
 @contextmanager
 def open_configparser_file(filepath, write_on_exit=False):
@@ -13,10 +14,13 @@ def open_configparser_file(filepath, write_on_exit=False):
     try:
         yield parser
     finally:
-        if not write_on_exit:
-            return
-        with open(filepath, 'w') as fd:
-            parser.write(fd)
+        if write_on_exit:
+            dirpath = path.dirname(filepath)
+            if not path.exists(dirpath):
+                makedirs(dirpath)
+            with open(filepath, 'w') as fd:
+                parser.write(fd)
+
 
 def set_index_url_in_file(filepath, section_name, key, index_url):
     with open_configparser_file(path.expanduser(filepath), True) as pydistutils:
@@ -24,8 +28,9 @@ def set_index_url_in_file(filepath, section_name, key, index_url):
             pydistutils.add_section(section_name)
         pydistutils.set(section_name, key, index_url)
 
-def set_index_url(argv=argv[1:]):
+
+def set_index_url(argv=sys.argv[1:]):
     [index_url] = argv
     set_index_url_in_file("~/.pydistutils.cfg", "easy_install", "index-url", index_url)
+    set_index_url_in_file("~/.pip/pip.conf", "global", "index-url", index_url)
     set_index_url_in_file("~/.buildout/default.cfg", "buildout", "index", index_url)
-
