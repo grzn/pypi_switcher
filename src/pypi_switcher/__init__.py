@@ -4,10 +4,14 @@ import sys
 from infi.pyutils.contexts import contextmanager
 from os import path, makedirs
 
+try:
+    from ConfigParser import ConfigParser
+except ImportError:
+    from configparser import ConfigParser
+
 
 @contextmanager
 def open_configparser_file(filepath, write_on_exit=False):
-    from ConfigParser import ConfigParser
     parser = ConfigParser()
     if path.exists(filepath):
         parser.read(filepath)
