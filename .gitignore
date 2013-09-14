@@ -52,3 +52,4 @@ tmp*
 !tmp*py
 
 src/pypi_switcher/__version__.py
+bootstrap.py
