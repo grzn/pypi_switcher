@@ -18,5 +18,7 @@ In order to generate these, run:
 
 In our development environment, we use isolated python builds, by running the following instead of the last command:
 
-    bin/buildout install development-scripts
+Run the following:
 
+    easy_install -U infi.projector
+    projector devenv build
